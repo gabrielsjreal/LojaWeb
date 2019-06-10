@@ -27,6 +27,8 @@ namespace CasaDoCodigo
 
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            services.AddTransient<IDataService, DataService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +54,7 @@ namespace CasaDoCodigo
                     template: "{controller=Pedido}/{action=Carrossel}/{id?}");
             });
 
-            serviceProvider.GetService<ApplicationContext>().Database.EnsureCreated();
+            serviceProvider.GetService<IDataService>().InicializaDB();
         }
     }
 }

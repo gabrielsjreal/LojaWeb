@@ -12,11 +12,13 @@ namespace CasaDoCodigo.Controllers
     {
         private readonly IProdutoRepository produtoRepository;
         private readonly IPedidoRepository pedidoRepository;
-
-        public PedidoController(IProdutoRepository produtoRepository, IPedidoRepository pedidoRepository)
+        private readonly IItemPedidoRepository itemPedidoRepository;
+        public PedidoController(IProdutoRepository produtoRepository, IPedidoRepository pedidoRepository,
+            IItemPedidoRepository itemPedidoRepository)
         {
             this.pedidoRepository = pedidoRepository;
             this.produtoRepository = produtoRepository;
+            this.itemPedidoRepository = itemPedidoRepository;
         }
 
         public IActionResult Carrossel()
@@ -48,6 +50,12 @@ namespace CasaDoCodigo.Controllers
             //Comando para passar os dados do pedido para a view de Resumo
             Pedido pedido = pedidoRepository.GetPedido(); 
             return View(pedido);
+        }
+
+        [HttpPost]
+        public void UpdateQuantidade([FromBody]ItemPedido itemPedido)
+        {
+            itemPedidoRepository.UpDateQuantidade(itemPedido);
         }
     }
 }

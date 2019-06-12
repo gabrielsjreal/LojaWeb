@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CasaDoCodigo.Models;
+using CasaDoCodigo.Models.ViewModels;
 using CasaDoCodigo.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,16 +36,27 @@ namespace CasaDoCodigo.Controllers
                 pedidoRepository.AddItem(codigo);
             }
 
-            Pedido pedido = pedidoRepository.GetPedido();
+            //Pedido pedido = pedidoRepository.GetPedido();
 
-            return View(pedido.Itens);
+            List<ItemPedido> itens = pedidoRepository.GetPedido().Itens;
+            CarrinhoViewModel carrinhoViewModel = new CarrinhoViewModel(itens);
+            return base.View(carrinhoViewModel);
         }
 
         public IActionResult Cadastro()
         {
-            return View();
+            var pedido = pedidoRepository.GetPedido();
+
+            if (pedido == null)
+            {
+                return RedirectToAction("Carrossel");
+            }
+            return View(pedido.Cadastro);
         }
 
+        // Esse comando 'HttpPost', impede que acesse a view 'Resumo' digitando o caminho diretamente na url
+        // Por exemplo: http://localhost:50080/Pedido/resumo
+        [HttpPost]
         public IActionResult Resumo()
         {
             //Comando para passar os dados do pedido para a view de Resumo
@@ -53,9 +65,9 @@ namespace CasaDoCodigo.Controllers
         }
 
         [HttpPost]
-        public void UpdateQuantidade([FromBody]ItemPedido itemPedido)
+        public UpdateQuantidadeResponse UpdateQuantidade([FromBody]ItemPedido itemPedido)
         {
-            itemPedidoRepository.UpDateQuantidade(itemPedido);
+           return pedidoRepository.UpDateQuantidade(itemPedido);
         }
     }
 }

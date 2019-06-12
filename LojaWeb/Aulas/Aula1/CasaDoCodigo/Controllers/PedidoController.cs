@@ -57,11 +57,18 @@ namespace CasaDoCodigo.Controllers
         // Esse comando 'HttpPost', impede que acesse a view 'Resumo' digitando o caminho diretamente na url
         // Por exemplo: http://localhost:50080/Pedido/resumo
         [HttpPost]
-        public IActionResult Resumo()
+        public IActionResult Resumo(Cadastro cadastro)
         {
-            //Comando para passar os dados do pedido para a view de Resumo
-            Pedido pedido = pedidoRepository.GetPedido(); 
-            return View(pedido);
+            //comando para a validação no servidor
+            if (ModelState.IsValid)
+            {
+                //Comando para passar os dados do pedido para a view de Resumo
+                Pedido pedido = pedidoRepository.UpdateCadastro(cadastro);
+                return View(pedido);
+            }
+            return RedirectToAction("Cadastro");
+
+            
         }
 
         [HttpPost]

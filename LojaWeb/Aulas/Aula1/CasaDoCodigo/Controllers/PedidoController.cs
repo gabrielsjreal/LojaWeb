@@ -57,6 +57,8 @@ namespace CasaDoCodigo.Controllers
         // Esse comando 'HttpPost', impede que acesse a view 'Resumo' digitando o caminho diretamente na url
         // Por exemplo: http://localhost:50080/Pedido/resumo
         [HttpPost]
+        //Protegendo uma Action com ValidateAntiForgeryToken
+        [ValidateAntiForgeryToken]
         public IActionResult Resumo(Cadastro cadastro)
         {
             //comando para a validação no servidor
@@ -72,6 +74,8 @@ namespace CasaDoCodigo.Controllers
         }
 
         [HttpPost]
+        // o comando abaixo é usado para proteger contra ataques 
+        [ValidateAntiForgeryToken]
         public UpdateQuantidadeResponse UpdateQuantidade([FromBody]ItemPedido itemPedido)
         {
            return pedidoRepository.UpDateQuantidade(itemPedido);
